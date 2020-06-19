@@ -1,0 +1,38 @@
+Completed:
+-> put the validations in all the models, as well as schemas
+-> order placed karta pela cart tenu session ma user_id hovu joeye Validation
+-> 2 cart ne add karva no endpoint banavvo
+-> user-roles mate decorater banavvu
+-> handling images
+-> fix the login issue, password is not matching
+
+Remaining:
+-> need to write logic for adding the item to product
+-> create cart while creating the user
+-> email block-listing
+-> create generic product endpoint or (create garbage-collector for dummy attributes)
+-> handling invoices
+-> mailing functionality
+-> logout functionality
+-> swagger UI (Doc Generations)
+-> log management
+-> OperationsError, IntegrityErrors, etc errors should be managed
+-> need to write complex logic for coupon
+-> validations at schema level
+-> create custom Exceptions
+-> user email should not gone to spam
+-> create the admin pages
+-> need to add limit on every endpoints
+-> needs to do paginations for evenry endpoints
+-> need to fix the logic behind adding the cart_items, placing order
+
+-> Can be give an option to manage the sessions.
+
+-> create test-suit
+-> testing the mail performance
+
+
+After main functionality Developments
+-> payment options
+-> db back-ups
+-> db histories

@@ -1,0 +1,11 @@
+{% if current_user.is_authenticated %}
+    {% extends admin_base_template %}
+{% else %}
+    <script type="text/javascript">
+        next = window.location.pathname
+        url = new URL(window.location.origin)
+        url.pathname = "{{ url_for('admin_login') }}"
+        url.searchParams.set("next", next)
+        window.location.href = url.href
+    </script>
+{% endif %}
