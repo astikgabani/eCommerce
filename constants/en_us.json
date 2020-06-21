@@ -4,6 +4,7 @@
   "address_deleted": "Address deleted successfully",
   "address_not_found": "Address is not present",
 
+  "no_item_in_cart": "No items in cart",
   "cart_not_found": "Cart not found",
   "cart_already_created": "Cart is already created",
   "cart_created": "Cart created successfully",

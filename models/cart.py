@@ -29,13 +29,12 @@ class CartModel(db.Model, SuperModel):
     def count_total(self):
         total_sum = 0
         if self.cart_items and isinstance(self.cart_items, list):
-            if self.coupon:
-                for cart_item in self.cart_items:
-                    disc_price = 0
-                    cart_item_price = cart_item.get_price()
-                    if self.coupon in cart_item.product.coupons:
-                        disc_price = self.coupon.get_discount_price(cart_item_price)
-                    total_sum += cart_item_price - disc_price
+            for cart_item in self.cart_items:
+                disc_price = 0
+                cart_item_price = cart_item.get_price()
+                if self.coupon in cart_item.product.coupons:
+                    disc_price = self.coupon.get_discount_price(cart_item_price)
+                total_sum += cart_item_price - disc_price
         return total_sum
 
     def pre_save(self):
@@ -46,11 +45,11 @@ class CartModel(db.Model, SuperModel):
         return f"<{self.__class__.__name__} {self.id}>"
 
     @classmethod
-    def get_or_create(cls, user_id=None, session_id=None):
-        cart = cls.get_item(user_id=user_id, session_id=session_id)
+    def get_or_create(cls, **kwargs):
+        cart = cls.get_item(**kwargs)
         if cart:
             return cart
-        new_cart = cls(user_id=user_id, session_id=session_id)
+        new_cart = cls(**kwargs)
         new_cart.save_to_db()
         return new_cart
 

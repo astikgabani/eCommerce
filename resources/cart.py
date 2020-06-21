@@ -103,21 +103,21 @@ class CartItem(Resource):
         session = UserSessionModel.get_item(ip=client_ip, user_id=user)
         cart = CartModel.get_or_create(user_id=user, session=session)
         product = ProductModel.get_item(id=req_data.get("product_id"))
-        if product:
-            cart_item = cart_item_schema.load(req_data)
-            cart_item.cart = cart
-            cart_item.product = product
-            print(cart_item.get_json_data())
-            cart_item.save_to_db()
-            return (
-                {
-                    "message": gettext("cart_item_added"),
-                    "data": cart_item_schema.dump(cart_item),
-                },
-                201,
-            )
-        else:
+        if not product:
             return {"message": gettext("product_not_found")}, 409
+        cart_item = cart_item_schema.load(req_data, instance=CartItemsModel.get_item(product_id=product.id, attr_option_id=req_data.get("attr_option_id")))
+        if cart_item.id:
+            cart_item.quantity += 1
+        cart_item.cart = cart
+        cart_item.product = product
+        cart_item.save_to_db()
+        return (
+            {
+                "message": gettext("cart_item_added"),
+                "data": cart_item_schema.dump(cart_item),
+            },
+            201,
+        )
 
     @classmethod
     @jwt_optional
@@ -126,7 +126,7 @@ class CartItem(Resource):
         req_data = request.get_json()
         client_ip = request.remote_addr
         session = UserSessionModel.get_item(ip=client_ip, user_id=user)
-        cart = CartModel.get_or_create(user_id=user, session_id=session.id)
+        cart = CartModel.get_or_create(user_id=user, session=session)
         cart_item = cart_item_schema.load(
             req_data,
             instance=CartItemsModel.get_item(

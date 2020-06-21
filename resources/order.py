@@ -49,6 +49,8 @@ class OrderCreate(Resource):
         client_ip = request.remote_addr
         session = UserSessionModel.get_item(user_id=user, ip=client_ip)
         cart = CartModel.get_item(user_id=user, session=session)
+        if not cart:
+            return {"message": gettext("no_item_in_cart")}
         req_data.update({"cart_id": cart.id})
         order = order_schema.load(
             req_data, instance=OrderModel.get_item(cart_id=cart.id)
