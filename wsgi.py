@@ -14,7 +14,7 @@ mail.init_app(application)
 admin.init_app(application)
 
 
-@app.before_first_request
+@application.before_first_request
 def create_tables():
     db.create_all()
     if UserRoleModel.get_item(role="admin"):
