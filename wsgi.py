@@ -31,3 +31,7 @@ def create_tables():
     user.save_to_db()
     user.roles.append(user_role)
     user.save_to_db()
+
+
+if __name__ == "__main__":
+    application.run()
