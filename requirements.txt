@@ -22,3 +22,4 @@ git+https://github.com/maxcountryman/flask-uploads.git
 uwsgi
 Flask-Login
 flask-mail
+python-dotenv
