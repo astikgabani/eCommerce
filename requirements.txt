@@ -23,3 +23,4 @@ uwsgi
 Flask-Login
 flask-mail
 python-dotenv
+flask-admin
