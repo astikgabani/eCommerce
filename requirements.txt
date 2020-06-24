@@ -24,3 +24,4 @@ Flask-Login
 flask-mail
 python-dotenv
 flask-admin
+psycopg2
