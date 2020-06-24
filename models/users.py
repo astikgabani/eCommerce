@@ -35,7 +35,7 @@ class UserModel(UserMixin, db.Model, SuperModel):
     password = db.Column(db.String(100), nullable=False)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
-    phone_no = db.Column(db.Integer, nullable=False)
+    phone_no = db.Column(db.String(10), nullable=False)
     dob = db.Column(db.Date, nullable=True)
     gender = db.Column(db.Enum(GenderEnum), default=GenderEnum.male)
 
