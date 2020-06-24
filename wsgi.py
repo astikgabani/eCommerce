@@ -1,9 +1,10 @@
 from app import app
 
+from flask_restful import Api
+
 from models.users import UserModel, UserRoleModel
 
 from plugins.admin import admin
-from plugins.api import api
 from plugins.db import db
 from plugins.ma import ma
 from plugins.mail import mail
@@ -11,11 +12,12 @@ from plugins.mail import mail
 from add_resources import add_resources
 from add_admin_views import add_admin_views
 
-admin.init_app(app)
-api.init_app(api)
 db.init_app(app)
 ma.init_app(app)
 mail.init_app(app)
+admin.init_app(app)
+
+api = Api(app)
 
 
 @app.before_first_request
