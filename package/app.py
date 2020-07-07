@@ -1,3 +1,4 @@
+from logging.config import fileConfig
 from urllib.parse import urljoin
 
 from flask import Flask, render_template, request, redirect, url_for
@@ -14,6 +15,9 @@ from utils.image_helper import IMAGE_SET
 
 
 app = Flask(__name__)
+
+# Logging Configuration
+fileConfig('config/logging.cfg')
 
 load_dotenv("config/.env", verbose=True)
 app.config.from_object("config.default_config")
@@ -44,6 +48,7 @@ def load_user(user_id):
 
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
+    app.logger.error("starting the admin page")
     redirect_path = request.args.get("next") or request.form.get("next") or None
     if current_user.is_authenticated:
         return redirect(url_for("admin.index"))
