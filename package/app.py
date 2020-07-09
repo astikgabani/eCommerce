@@ -1,4 +1,4 @@
-from logging.config import fileConfig
+from logging.config import fileConfig, dictConfig
 from urllib.parse import urljoin
 
 from flask import Flask, render_template, request, redirect, url_for
@@ -13,13 +13,17 @@ from marshmallow import ValidationError
 
 from utils.image_helper import IMAGE_SET
 
+from constants.constants import get_path
+
 
 app = Flask(__name__)
 
 # Logging Configuration
-fileConfig('config/logging.cfg')
+from config.logging import log_config
 
-load_dotenv("config/.env", verbose=True)
+dictConfig(log_config)
+
+load_dotenv(get_path("config", ".env"), verbose=True)
 app.config.from_object("config.default_config")
 app.config.from_object("config.mail_config")
 # app.config.from_object("config.production_config")

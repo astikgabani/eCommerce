@@ -38,6 +38,7 @@ class CartModel(db.Model, SuperModel):
         return total_sum
 
     def pre_save(self):
+        print(self.count_total)
         self.total = self.count_total
         assert self.total >= 0, "total is not valid"
 
