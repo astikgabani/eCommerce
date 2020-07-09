@@ -38,7 +38,6 @@ class CartModel(db.Model, SuperModel):
         return total_sum
 
     def pre_save(self):
-        print(self.count_total)
         self.total = self.count_total
         assert self.total >= 0, "total is not valid"
 
@@ -80,7 +79,7 @@ class CartItemsModel(db.Model, SuperModel):
                 if len(attr.attrs_options) > 0:
                     assert (
                         self.attr_option_id is not None
-                    ), "Attributes options should be choosen if attributes are present in product"
+                    ), "Attributes options should be chosen if attributes are present in product"
         assert self.quantity > 0, "Quantity is not valid"
 
     def __repr__(self) -> str:
