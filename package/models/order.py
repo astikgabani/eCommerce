@@ -50,7 +50,7 @@ class OrderModel(db.Model, SuperModel):
 
     def pre_save(self):
         self.total = self.cart.count_total
-        assert self.total > 0, "Order total can't be negetive or Zero"
+        assert self.total > 0, "Order total can't be negative or Zero"
         assert (
             self.cart.user_id is not None
         ), "Only registered Users can placed the order"

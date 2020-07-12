@@ -86,9 +86,7 @@ class UserModel(UserMixin, db.Model, SuperModel):
         return check_password_hash(self.password, password)
 
     def check_password_already_hashed(self):
-        if self.password.startswith("pbkdf2:sha256:"):
-            return True
-        return False
+        return True if self.password.startswith("pbkdf2:sha256:") else False
 
 
 class UserSessionModel(db.Model, SuperModel):

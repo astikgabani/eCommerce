@@ -20,7 +20,7 @@ class ReviewModel(db.Model, SuperModel):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def pre_save(self):
-        assert 0 > self.ratings >= 5, "ratings should be between 1 and 5"
+        assert 0 < self.ratings <= 5, "ratings should be between 1 and 5"
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.ratings}>"

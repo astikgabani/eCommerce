@@ -36,5 +36,5 @@ class CouponModel(db.Model, SuperModel):
                 disc_price = (cart_item_price * self.value) / 100
                 return min(disc_price, self.max_value, cart_item_price)
             else:
-                return min(cart_item_price, self.max_value)
+                return min(cart_item_price, self.value)
         return 0
