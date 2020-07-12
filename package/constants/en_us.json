@@ -3,6 +3,7 @@
   "address_updated": "Address updated successfully",
   "address_deleted": "Address deleted successfully",
   "address_not_found": "Address is not present",
+  "address_already_created": "Address is already created",
 
   "no_item_in_cart": "No items in cart",
   "cart_not_found": "Cart not found",

@@ -109,6 +109,15 @@ class UserSessionModel(db.Model, SuperModel):
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.ip}>"
 
+    @classmethod
+    def get_or_create(cls, ip, user_id, **kwargs):
+        session = cls.get_item(ip=ip, user_id=user_id, **kwargs)
+        if session:
+            return session
+        new_session = cls(ip=ip, user_id=user_id, **kwargs)
+        new_session.save_to_db()
+        return new_session
+
 
 class UserSessionTokenModel(db.Model, SuperModel):
     __tablename__ = "user_session_token"

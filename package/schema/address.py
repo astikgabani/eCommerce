@@ -32,9 +32,3 @@ class AddressSchemaWithId(ma.SQLAlchemyAutoSchema):
         exclude = ("created", "updated", "active")
         unknown = INCLUDE
         load_instance = True
-
-    @pre_load
-    def slugify_name(self, in_data, **kwargs):
-        in_data["address_id"] = in_data.get("id", None)
-        in_data.pop("id", None)
-        return in_data
