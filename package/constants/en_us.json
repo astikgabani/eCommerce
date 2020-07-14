@@ -50,11 +50,13 @@
   "products_should_list": "The value of 'products' should be in form of list",
 
   "product_attribute_not_found": "Product attribute is not found",
+  "product_attribute_already_created": "Product attribute already created",
   "product_attribute_created": "Product attribute created successfully",
   "product_attribute_updated": "Product attribute updated successfully",
   "product_attribute_deleted": "Product attribute deleted successfully",
 
   "product_attribute_option_not_found": "Product attribute option is not found",
+  "product_attribute_option_already_present": "Product attribute option is already present",
   "product_attribute_option_created": "Product attribute option created successfully",
   "product_attribute_option_updated": "Product attribute option updated successfully",
   "product_attribute_option_deleted": "Product attribute option deleted successfully",

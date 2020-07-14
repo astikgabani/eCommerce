@@ -39,18 +39,43 @@ product_all_schema = ProductAllSchema()
 
 class Product(Resource):
     def get(self, slug):
+        """
+        @param slug: slug of product
+        @type slug: string
+
+        Get the details of specific product
+        1. fetch the details of specific product from the db
+        2. return product details
+
+        @return: return product details
+        @rtype: dict of product details
+        """
         product = ProductModel.get_item(slug=slug)
-        return product_schema.dump(product), 200
+        if not product:
+            return {"data": gettext("product_not_found")}, 404
+        return {"data": product_schema.dump(product)}, 200
 
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def put(self, slug):
+        """
+        @param slug: slug of product
+        @type slug: string
+
+        Update the details of specific product
+        1. load the details of specific product from the request data
+        2. if product not found, return 404 not found
+        3. save to db and return updated product detail
+
+        @return: updated product detail
+        @rtype: dict of updated product details
+        """
         req_data = request.get_json()
         product = product_schema.load(
             req_data, instance=ProductModel.get_item(slug=slug), partial=True
         )
         if not product.get("id"):
-            return {"message": gettext("product_not_found")}
+            return {"message": gettext("product_not_found")}, 404
         product.save_to_db()
         return (
             {
@@ -63,22 +88,45 @@ class Product(Resource):
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def delete(self, slug):
+        """
+        @param slug: slug of product
+        @type slug: string
+
+        Delete the details of specific product
+        1. fetch the details of specific product from the db
+        2. if product not found, return 404 not found
+        3. deactivate, save to db and return updated product detail
+
+        @return: updated product detail
+        @rtype: dict of updated product details
+        """
         product = ProductModel.get_item(slug=slug)
         if not product:
-            return {"message": gettext("product_not_found")}
+            return {"message": gettext("product_not_found")}, 404
         product.deactivate()
         product.save_to_db()
-        return {"message": gettext("product_deleted")}, 201
+        return {"message": gettext("product_deleted")}, 200
 
 
 class ProductCreate(Resource):
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def post(self):
+        """
+        Create a product.
+        1. load the data based on request data.
+        2. if product found, return 409 conflict
+        3. save to db and return the newly created product details
+
+        @return: newly created product details
+        @rtype: dict of product details
+        """
         req_data = request.get_json()
-        product = product_schema.load(req_data)
+        product = product_schema.load(
+            req_data, instance=ProductModel.get_item(slug=req_data.get("slug"))
+        )
         if product.id:
-            return {"message": gettext("product_already_found")}
+            return {"message": gettext("product_already_found")}, 409
         product.save_to_db()
         return (
             {
@@ -94,6 +142,14 @@ class Products(Resource):
     @classmethod
     @paginate("products", schema=product_all_schema)
     def get(cls):
+        """
+        Get the list of products
+        1. return the all active products.
+        (Paginate all this products.)
+
+        @return:
+        @rtype:
+        """
         return ProductModel.get_active()
 
     @classmethod
@@ -121,7 +177,14 @@ class Products(Resource):
                 }]
             }]
         }
-        :return: List of all the products which has not been created successfully.
+
+        Create the products by all the json.
+        1. loop over the products
+        2. load this products, if product found, save to the err_list
+        3. save to db and continue in looping
+        4. return the error products
+
+        @return: List of all the products which has not been created successfully.
         {
             "error_products": []
         }
@@ -147,12 +210,38 @@ class Products(Resource):
 
 class ProductAttribute(Resource):
     def get(self, attr_id):
+        """
+        @param attr_id: product attribute id
+        @type attr_id: int
+
+        Get the detail of product attributes
+        1. fetch the product attribute from the db
+        2. if attribute not found, return 404 not found
+        3. return product attribute details
+
+        @return: return product attribute details
+        @rtype: dict of product details
+        """
         product_attr = ProductAttributeModel.get_item(id=attr_id)
-        return product_attribute_schema.dump(product_attr), 200
+        if not product_attr:
+            return {"message": gettext("product_attribute_not_found")}, 404
+        return {"data": product_attribute_schema.dump(product_attr)}, 200
 
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def put(self, attr_id):
+        """
+        @param attr_id: product attribute id
+        @type attr_id: int
+
+        Update the detail of product attributes
+        1. load the product attribute from using product details
+        2. if attribute not found, return 404 not found
+        3. save to db and return updated product attribute details
+
+        @return: return updated product attribute details
+        @rtype: dict of product details
+        """
         req_data = request.get_json()
         product_attr = product_attribute_schema.load(
             req_data, instance=ProductAttributeModel.get_item(id=attr_id), partial=True
@@ -171,6 +260,18 @@ class ProductAttribute(Resource):
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def delete(self, attr_id):
+        """
+        @param attr_id: product attribute id
+        @type attr_id: int
+
+        Get the detail of product attributes
+        1. fetch the product attribute from the db
+        2. if attribute not found, return 404 not found
+        3. deactivate, save to db and return proper delete msg
+
+        @return: return proper delete msg
+        @rtype: proper delete msg
+        """
         product_attr = ProductAttributeModel.get_item(id=attr_id)
         if not product_attr.get("id"):
             return {"message": gettext("product_attribute_not_found")}
@@ -183,6 +284,15 @@ class ProductAttributeCreate(Resource):
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def post(self):
+        """
+        Create the product attribute.
+        1. load the product attribute using request data
+        2. if product attribute found, return 409 conflict
+        3. save to db and return newly created product attribute details.
+
+        @return: newly created product attribute
+        @rtype: dict of product attribute details
+        """
         req_data = request.get_json()
         product_attr = product_attribute_schema.load(
             req_data,
@@ -191,7 +301,7 @@ class ProductAttributeCreate(Resource):
             ),
         )
         if product_attr.get("id"):
-            return {"message": gettext("product_attribute_not_found")}
+            return {"message": gettext("product_attribute_already_created")}, 409
         product_attr.save_to_db()
         return (
             {
@@ -206,7 +316,21 @@ class ProductAttributes(Resource):
     @classmethod
     @required_role(["admin", "shop_keeper"])
     def get(cls, slug):
+        """
+        @param slug: slug of product
+        @type slug: string
+
+        Get the list of attributes of specific product
+        1. fetch the product from the db
+        2. if product not found, return 404 not found
+        3. loop over the product's attributes, create a list of that, return this list.
+
+        @return: list of product attributes
+        @rtype: dict of list
+        """
         product = ProductModel.get_item(slug=slug)
+        if not product:
+            return {"message": gettext("product_not_found")}, 404
         return (
             {
                 "product": product_schema.dump(product),
@@ -221,12 +345,38 @@ class ProductAttributes(Resource):
 
 class ProductAttributeOption(Resource):
     def get(self, opt_id):
+        """
+        @param opt_id: product attribute option id
+        @type opt_id: int
+
+        Get the detail of specific product attribute option details
+        1. fetch the product attribute option from the db
+        2. if option not found, return 404 not found
+        3. return the product attribute option details
+
+        @return: product attribute option details
+        @rtype: dict of product attribute option
+        """
         product_attr_opt = ProductAttributeOptionsModel.get_item(id=opt_id)
-        return product_attribute_options_schema.dump(product_attr_opt), 200
+        if not product_attr_opt:
+            return {"message": gettext("product_attribute_option_not_found")}, 404
+        return {"data": product_attribute_options_schema.dump(product_attr_opt)}, 200
 
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def put(self, opt_id):
+        """
+        @param opt_id: product attribute option id
+        @type opt_id: int
+
+        Update the detail of specific product attribute option details
+        1. load the product attribute option with the request data
+        2. if option not found, return 404 not found
+        3. save to db and return the updated product attribute option details
+
+        @return: updated product attribute option details
+        @rtype: dict of updated product attribute option
+        """
         req_data = request.get_json()
         product_attr_opts = product_attribute_options_schema.load(
             req_data,
@@ -234,7 +384,7 @@ class ProductAttributeOption(Resource):
             partial=True,
         )
         if not product_attr_opts.id:
-            return {"message": gettext("product_attribute_option_not_found")}
+            return {"message": gettext("product_attribute_option_not_found")}, 404
         product_attr_opts.save_to_db()
         return (
             {
@@ -247,6 +397,18 @@ class ProductAttributeOption(Resource):
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def delete(self, opt_id):
+        """
+        @param opt_id: product attribute option id
+        @type opt_id: int
+
+        Delete the detail of specific product attribute option
+        1. fetch the product attribute option from the db
+        2. if option not found, return 404 not found
+        3. deactivate, save to db and return the proper delete msg
+
+        @return: delete msg
+        @rtype: dict of deletion msg
+        """
         product_attr_opts = ProductAttributeOptionsModel.get_item(id=opt_id)
         if not product_attr_opts:
             return {"message": gettext("product_attribute_option_not_found")}
@@ -259,8 +421,20 @@ class ProductAttributeOptionCreate(Resource):
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def post(self):
+        """
+        Create a product attribute option.
+        1. load the product attribute option with request data
+        2. if product already found, return 409 conflict
+        3. save to db and return newly created product attribute option
+        @return: newly created product attribute option
+        @rtype: dict of newly created item details
+        """
         req_data = request.get_json()
-        product_attr_opts = product_attribute_options_schema.load(req_data)
+        product_attr_opts = product_attribute_options_schema.load(
+            req_data, instance=ProductAttributeOptionsModel.get_item(name=req_data("name")),
+        )
+        if product_attr_opts.id:
+            return {"message": gettext("product_attribute_option_already_present")}, 409
         product_attr_opts.save_to_db()
         return (
             {
@@ -274,7 +448,21 @@ class ProductAttributeOptionCreate(Resource):
 class ProductAttributeOptions(Resource):
     @classmethod
     def get(cls, attr_id):
+        """
+        @param attr_id: product attribute id
+        @type attr_id: int
+
+        Get the list of all options of provided product attribute
+        1. fetch the product attribute from db
+        2. if product attribute not found, return 404 not found
+        3. loop over the list of product attribute options and return all these details as list
+
+        @return: product attribute options of given attribute
+        @rtype: dict of list
+        """
         product_attribute = ProductAttributeModel.get_item(id=attr_id)
+        if not product_attribute:
+            return {"message": gettext("product_attribute_not_found")}, 404
         return (
             {
                 "product_attribute": product_attribute_schema.dump(product_attribute),
@@ -289,7 +477,22 @@ class ProductAttributeOptions(Resource):
 
 class ProductImages(Resource):
     def get(self, slug):
+        """
+        @param slug: slug of product
+        @type slug: string
+
+        Get all the images of given product slug.
+        1. fetch the all images from db
+        2. if no image found, return 404 not found
+        3. loop over the images, if image is safe, add image into the list, else delete the record in db
+        4. return this list
+
+        @return: list of all the images of given product
+        @rtype: dict of list
+        """
         product_images = ProductImageModel.get_items(product_slug=slug)
+        if not product_images:
+            return {"message": gettext("image_not_registered")}, 404
         return (
             {
                 "Product Images": [
@@ -307,6 +510,20 @@ class ProductImages(Resource):
     @jwt_required
     @required_role(["admin", "shop_keeper"])
     def post(self, slug):
+        """
+        @param slug: slug of product
+        @type slug: string
+
+        Add all the images for given product slug.
+        1. Get the list of images from the request.
+        2. if no image found, return 404 not found
+        3. loop over the image list.
+        4. load the image through schema, save image to specific folder and save the data to db
+        4. if any error occurred due to invalid file, add this file into error list
+
+        @return: number of image uploaded successfully along with the err msg if err occurred
+        @rtype: dict of list
+        """
         image_list = list(request.files.listvalues())[0]
         if not len(image_list):
             return {"message": gettext("image_not_found")}, 400
@@ -341,6 +558,22 @@ class ProductImages(Resource):
 
 class ProductImage(Resource):
     def get(self, slug, filename: str):
+        """
+        @param slug: slug of product
+        @type slug: string
+        @param filename: image name
+        @type filename: string
+
+        Get specific image of given product
+        1. fetch the image data from db.
+        2. we are checking for the safe filename, return 400 bad request if found
+        3. we are checking for the safe file, return 400 bad request if found
+        4. if image not found, return 404 not found.
+        5. try to return the image, if image not found, return 404 not found
+
+        @return: image file
+        @rtype: image file
+        """
         image = ProductImageModel.get_item(product_slug=slug, image_name=filename)
         folder = f"product_{slug}"
         if not image_helper.is_filename_safe(filename):
@@ -356,6 +589,22 @@ class ProductImage(Resource):
 
     @jwt_required
     def delete(self, slug, filename):
+        """
+        @param slug: slug of product
+        @type slug: string
+        @param filename: image name
+        @type filename: string
+
+        Delete specific image of given product
+        1. fetch the image data from db.
+        2. we are checking for the safe filename, return 400 bad request if found
+        3. we are checking for the safe file, return 400 bad request if found
+        4. if image not found, return 404 not found.
+        5. try to return the image, if image not found, return 404 not found
+
+        @return: image file
+        @rtype: image file
+        """
         if not image_helper.is_filename_safe(filename):
             return {"message": gettext("image_not_found")}, 404
 

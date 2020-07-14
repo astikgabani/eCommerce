@@ -292,8 +292,8 @@ class UserEmailConfirmByUser(Resource):
     def get(self, user_id: int):
         """
         return confirmation details for the user. Only for testing
-        :param user_id:
-        :return:
+        @param user_id:
+        @return:
         """
         user = UserModel.get_item(id=user_id)
         if not user:
@@ -314,8 +314,8 @@ class UserEmailConfirmByUser(Resource):
     def post(self, user_id: int):
         """
         resend confirmation email
-        :param user_id:
-        :return:
+        @param user_id:
+        @return:
         """
         user = UserModel.get_item(id=user_id)
         if not user:
