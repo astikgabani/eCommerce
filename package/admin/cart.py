@@ -13,6 +13,5 @@ class CartView(SuperView):
 
 
 class CartItemView(SuperView):
-
     def __init__(self, model=CartItemsModel, *args, **kwargs):
         super().__init__(model=model, *args, **kwargs)

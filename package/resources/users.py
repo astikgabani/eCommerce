@@ -253,9 +253,9 @@ class UserFreshLogin(Resource):
         if not user.verify_password(input_password):
             return {"message": gettext("user_invalid_credentials")}, 401
         return (
-                {"access_token": create_access_token(identity=user.id, fresh=True)},
-                200,
-            )
+            {"access_token": create_access_token(identity=user.id, fresh=True)},
+            200,
+        )
 
 
 class UserRoles(Resource):

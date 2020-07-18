@@ -84,7 +84,7 @@ class Coupon(Resource):
             return {"message": gettext("coupon_not_found")}, 400
         coupon.save_to_db()
         return (
-            {"message": gettext("coupon_updated"), "data": coupon_schema.dump(coupon), },
+            {"message": gettext("coupon_updated"), "data": coupon_schema.dump(coupon),},
             200,
         )
 

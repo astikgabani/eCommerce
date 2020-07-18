@@ -71,10 +71,7 @@ class CartItemsModel(db.Model, SuperModel):
     attr_option_id = db.Column(db.ForeignKey("product_attr_option.id"))
 
     def pre_save(self):
-        if (
-            self.product
-            and len(self.product.attrs) > 0
-        ):
+        if self.product and len(self.product.attrs) > 0:
             for attr in self.product.attrs:
                 if len(attr.attrs_options) > 0:
                     assert (

@@ -117,9 +117,11 @@ class ProductCategoryCreate(Resource):
         @rtype: dict of list
         """
         req_data = request.get_json()
-        category = product_category_schema.load(req_data, instance=ProductCategoryModel.get_item(
+        category = product_category_schema.load(
+            req_data,
+            instance=ProductCategoryModel.get_item(
                 name=req_data.get("name"), parent_id=parent_id
-            )
+            ),
         )
         if category.id:
             return {"message": gettext("product_category_already_created")}, 409

@@ -138,7 +138,6 @@ class ProductCreate(Resource):
 
 
 class Products(Resource):
-
     @classmethod
     @paginate("products", schema=product_all_schema)
     def get(cls):
@@ -431,7 +430,8 @@ class ProductAttributeOptionCreate(Resource):
         """
         req_data = request.get_json()
         product_attr_opts = product_attribute_options_schema.load(
-            req_data, instance=ProductAttributeOptionsModel.get_item(name=req_data("name")),
+            req_data,
+            instance=ProductAttributeOptionsModel.get_item(name=req_data("name")),
         )
         if product_attr_opts.id:
             return {"message": gettext("product_attribute_option_already_present")}, 409

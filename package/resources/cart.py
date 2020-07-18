@@ -138,7 +138,12 @@ class CartItem(Resource):
         product = ProductModel.get_item(id=req_data.get("product_id"))
         if not product:
             return {"message": gettext("product_not_found")}, 409
-        cart_item = cart_item_schema.load(req_data, instance=CartItemsModel.get_item(product_id=product.id, attr_option_id=req_data.get("attr_option_id")))
+        cart_item = cart_item_schema.load(
+            req_data,
+            instance=CartItemsModel.get_item(
+                product_id=product.id, attr_option_id=req_data.get("attr_option_id")
+            ),
+        )
         if cart_item.id:
             cart_item.quantity += 1
         cart_item.cart = cart
