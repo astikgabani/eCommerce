@@ -1,13 +1,15 @@
-from marshmallow import RAISE, EXCLUDE
+from marshmallow import RAISE, EXCLUDE, fields
 from marshmallow_enum import EnumField
 
 from plugins.ma import ma
 
-from models.order import OrderModel, OrderReceiverModel, OrderStatusEnum
+from models.order import OrderModel, OrderReceiverModel, OrderStatusEnum, PaymentStatusEnum
 
 
 class OrderSchema(ma.SQLAlchemyAutoSchema):
     status = EnumField(OrderStatusEnum, by_name=True)
+    payment_status = EnumField(PaymentStatusEnum, by_name=True)
+    user_id = fields.Integer(required=False)
 
     class Meta:
         model = OrderModel

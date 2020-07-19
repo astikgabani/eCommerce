@@ -4,6 +4,7 @@ if some user has an access-token and
 if he trying to access the order receiver details using some dummy id, he might be able to get it.
 so it's information leakage
 """
+from stripe import error
 
 from flask import request
 from flask_restful import Resource
@@ -104,18 +105,56 @@ class OrderCreate(Resource):
         session = UserSessionModel.get_or_create(user_id=user, ip=client_ip)
         cart = CartModel.get_item(user_id=user, session=session)
         if not cart and not cart.cart_items:
-            return {"message": gettext("no_item_in_cart")}
-        req_data.update({"cart_id": cart.id})
+            return {"message": gettext("no_item_in_cart")}, 404
+        req_data.update({"cart_id": cart.id, "user_id": user})
         order = order_schema.load(
             req_data, instance=OrderModel.get_item(cart_id=cart.id)
         )
         if order.get("id"):
             return {"message": gettext("order_already_placed")}, 409
         order.save_to_db()
-        return (
-            {"message": gettext("order_placed"), "data": order_schema.dump(order)},
-            201,
-        )
+        try:
+            order.set_payment_status("initiated")
+            order.payment_with_stripe(req_data.get("token"))
+            order.set_payment_status("paid")
+            order.clear_all()
+            return (
+                {"message": gettext("order_placed"), "data": order_schema.dump(order)},
+                201,
+            )
+            # the following error handling is advised by Stripe, although the handling implementations are identical,
+            # we choose to specify them separately just to give the students a better idea what we can expect
+        except error.CardError as e:
+            # Since it's a decline, stripe.error.CardError will be caught
+            order.set_payment_status("failed")
+            return e.json_body, e.http_status
+        except error.RateLimitError as e:
+            # Too many requests made to the API too quickly
+            order.set_payment_status("failed")
+            return e.json_body, e.http_status
+        except error.InvalidRequestError as e:
+            # Invalid parameters were supplied to Stripe's API
+            order.set_payment_status("failed")
+            return e.json_body, e.http_status
+        except error.AuthenticationError as e:
+            # Authentication with Stripe's API failed
+            # (maybe you changed API keys recently)
+            order.set_payment_status("failed")
+            return e.json_body, e.http_status
+        except error.APIConnectionError as e:
+            # Network communication with Stripe failed
+            order.set_payment_status("failed")
+            return e.json_body, e.http_status
+        except error.StripeError as e:
+            # Display a very generic error to the user, and maybe send
+            # yourself an email
+            order.set_payment_status("failed")
+            return e.json_body, e.http_status
+        except Exception as e:
+            # Something else happened, completely unrelated to Stripe
+            print(e)
+            order.set_payment_status("failed")
+            return {"message": gettext("order_error")}, 500
 
 
 class OrderReceiver(Resource):

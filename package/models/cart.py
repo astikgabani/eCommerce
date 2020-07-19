@@ -58,7 +58,7 @@ class CartItemsModel(db.Model, SuperModel):
     __tablename__ = "cart_items"
 
     # cart
-    # cart_item
+    # product_option
     # product
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, default=1)
@@ -84,7 +84,7 @@ class CartItemsModel(db.Model, SuperModel):
 
     def get_price(self) -> float:
         price = self.product.price
-        for attr in self.product.attrs:
+        for attr in self.product_option:
             for option in attr.attrs_options:
                 price += option.price_change
         return price

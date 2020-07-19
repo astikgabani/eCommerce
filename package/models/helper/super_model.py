@@ -37,13 +37,20 @@ class SuperModel:
         pass
 
     def post_save(self):
-        pass
+        return True
 
     def save_to_db(self, *args, **kwargs):
         self.pre_save()
         db.session.add(self)
         db.session.commit()
-        self.post_save()
+        try:
+            post_save_flag = self.post_save()
+            if not post_save_flag:
+                db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
     def pre_delete(self):
         pass

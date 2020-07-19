@@ -34,3 +34,10 @@ class OrderStatusEnum(enum.Enum):
     placed = "Placed"
     delivered = "Delivered"
     cancelled = "Cancelled"
+
+
+class PaymentStatusEnum(enum.Enum):
+    pending = "Pending"
+    initiated = "Initiated"
+    failed = "Failed"
+    paid = "Paid"

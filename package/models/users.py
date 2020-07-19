@@ -56,6 +56,7 @@ class UserModel(UserMixin, db.Model, SuperModel):
         lazy="subquery",
         backref=db.backref("users", lazy=True),
     )
+    orders = db.relationship("OrderModel", backref="user", lazy=True)
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.email}>"

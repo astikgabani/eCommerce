@@ -123,9 +123,10 @@ class CartItem(Resource):
         2. load or create the cart obj from DB
         3. get the product from the DB.
         4. if product not found in DB, return the 409 conflict
-        5. load the cart_item and if any cart_item found to be in cart, increase the quantity.
-        6. if any cart_item not found to be in cart, add that product.
-        7. save to DB and return the added cart item.
+        5. read the quantity and remove it from request data
+        6. load the cart_item and if any cart_item found to be in cart, increase the quantity.
+        7. if any cart_item not found to be in cart, add that product.
+        8. save to DB and return the added cart item.
 
         @return: added cart_item
         @rtype: dict of newly added item
@@ -138,16 +139,21 @@ class CartItem(Resource):
         product = ProductModel.get_item(id=req_data.get("product_id"))
         if not product:
             return {"message": gettext("product_not_found")}, 409
+        quantity = req_data.get("quantity")
+        if quantity:
+            del req_data["quantity"]
         cart_item = cart_item_schema.load(
             req_data,
             instance=CartItemsModel.get_item(
-                product_id=product.id, attr_option_id=req_data.get("attr_option_id")
+                cart_id=cart.id, product_id=product.id, attr_option_id=req_data.get("attr_option_id")
             ),
         )
         if cart_item.id:
-            cart_item.quantity += 1
-        cart_item.cart = cart
-        cart_item.product = product
+            cart_item.quantity += int(quantity) or 1
+        else:
+            cart_item.quantity = int(quantity)
+            cart_item.cart = cart
+            cart_item.product = product
         cart_item.save_to_db()
         return (
             {

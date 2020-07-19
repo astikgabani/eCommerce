@@ -83,7 +83,7 @@ class UserLogin(Resource):
 
         # Loading session info
         session_instance = UserSessionModel.get_item(
-            user_id=user, type=req_data.get("type") or "web"
+            user_id=user.id, type=req_data.get("type") or "web"
         )
         current_session = user_session_schema.load(
             req_data, instance=session_instance, partial=True
@@ -101,7 +101,7 @@ class UserLogin(Resource):
             current_session.deactivate()
             current_session.save_to_db()
             current_session = user_session_schema.load(req_data)
-        note = gettext("user_login_max_count_reached")
+            note = gettext("user_login_max_count_reached")
 
         current_session.user = user
         current_session.ip = request.remote_addr

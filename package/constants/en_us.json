@@ -29,6 +29,7 @@
   "order_cancelled": "Order cancelled",
   "order_already_placed": "Order is already placed for this cart",
   "order_placed": "Order successfully placed",
+  "order_error": "Order fail due to some transaction issue",
 
   "order_receiver_not_found": "Order Receiver not found",
   "order_receiver_already_settled": "Order Receiver is already settled",

@@ -18,4 +18,5 @@ def send_confirmation_mail(email, link):
     try:
         mail.send(msg)
     except Exception as e:
+        print(e)
         raise MailException("Unable to send email")
