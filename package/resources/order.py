@@ -94,7 +94,11 @@ class OrderCreate(Resource):
         3. check for empty cart. return if found empty
         4. load the request data.
         5. if order found already placed, return that err msg
-        6. save to db and return the order details
+        6. save to db
+        7. Initiated the payment
+        8. Payment with stripe
+        9. if error occurred, return the proper msg
+        10. set payment status as paid
 
         @return: details of the placed order
         @rtype: dict of order's detail
