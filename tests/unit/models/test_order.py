@@ -27,12 +27,13 @@ class TestOrderModel(UnitBaseTest):
         # Configure
         mock_cart = self.obj.cart = PropertyMock()
         mock_cart.count_total = 20
+        self.obj.shipping_cost = 50
 
         # Execute
-        self.obj.pre_save()
+        self.obj.post_save()
 
         # Assert
-        self.assertEqual(self.obj.total, 20)
+        self.assertEqual(self.obj.total, 70)
 
     def test_deactivate(self):
         # Execute

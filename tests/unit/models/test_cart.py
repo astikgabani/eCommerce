@@ -128,8 +128,7 @@ class TestCartItemModel(UnitBaseTest):
         # Configure
         mock_product = self.cart_obj.product = MagicMock()
         mock_product.price = 100
-        [mock_attr] = mock_product.attrs = [MagicMock()]
-        [mock_attr_option] = mock_attr.attrs_options = [MagicMock()]
+        mock_attr_option = self.cart_obj.product_option = MagicMock()
         mock_attr_option.price_change = 9
 
         # Execute
