@@ -1,7 +1,6 @@
 .env
 POC/
 docs/
-*.log
 .db
 
 # Byte-compiled / optimized / DLL files
