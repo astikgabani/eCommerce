@@ -84,9 +84,8 @@ class CartItemsModel(db.Model, SuperModel):
 
     def get_price(self) -> float:
         price = self.product.price
-        for attr in self.product_option:
-            for option in attr.attrs_options:
-                price += option.price_change
+        if self.product_option:
+            price += self.product_option.price_change
         return price
 
     def post_save(self):
