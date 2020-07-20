@@ -34,6 +34,6 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        python -c "exec(\"import dotenv\ndotenv.load_dotenv('package/config/.env.example')\nimport os\nprint([x[0] for x in os.walk(os.getcwd())])\")"
+        python -c "exec(\"import dotenv\nimport os\ndotenv.load_dotenv(os.path.join(os.getcwd(), 'package', 'config', '.env.example'))\nprint(os.path.join(os.getcwd(), 'package/config/.env.example'))\")"
         export PYTHONPATH=package
         pytest
