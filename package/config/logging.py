@@ -10,9 +10,7 @@ log_config = {
         "wsgi": {
             "class": "logging.FileHandler",
             "formatter": "default",
-            "filename": constants.get_path(
-                "log", "main.log", root_path=os.path.dirname(constants.ROOT_PATH)
-            ),
+            "filename": os.path.join("log", "main.log")
         }
     },
     "root": {"level": "INFO", "handlers": ["wsgi"]},
