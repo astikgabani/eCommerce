@@ -20,6 +20,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+    - name: Setting Up Env Variable
+      uses: c-py/action-dotenv-to-setenv@v1
+      with:
         env-file: package/config/.env.example
     - name: Install dependencies
       run: |
@@ -34,6 +37,5 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        python -c "exec(\"import dotenv\nimport os\ndotenv.load_dotenv(os.path.join(os.getcwd(), 'package', 'config', '.env.example'))\nprint(os.path.join(os.getcwd(), 'package/config/.env.example'))\")"
         export PYTHONPATH=package
         pytest
