@@ -1,6 +1,5 @@
 from models.helper.super_model import SuperModel, db
 from models.helper.enums import AddressTypeEnum, CountryEnum
-from models.order import OrderModel
 
 from datetime import datetime
 
