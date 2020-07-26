@@ -1,5 +1,4 @@
 import json
-import os
 
 from constants.constants import get_path
 

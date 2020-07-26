@@ -16,9 +16,7 @@ def required_role(roles):
                 if role in user.roles:
                     return func(*args, **kwargs)
             return {"message": "Not a authorised user"}, 401
-
         return decorated_function
-
     return decorator
 
 

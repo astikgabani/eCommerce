@@ -8,6 +8,7 @@ from plugins.admin import admin
 from plugins.db import db
 from plugins.ma import ma
 from plugins.mail import mail
+from plugins.limiter import limiter
 
 from add_resources import add_resources
 from add_admin_views import add_admin_views
@@ -16,6 +17,7 @@ db.init_app(app)
 ma.init_app(app)
 mail.init_app(app)
 admin.init_app(app)
+limiter.init_app(app)
 
 api = Api(app)
 

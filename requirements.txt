@@ -26,3 +26,4 @@ python-dotenv
 flask-admin
 psycopg2
 stripe
+flask-limiter==1.3.1

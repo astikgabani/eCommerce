@@ -15,6 +15,8 @@ from utils.image_helper import IMAGE_SET
 
 from constants.constants import get_path
 
+import werkzeug.exceptions
+
 
 app = Flask(__name__)
 
@@ -38,6 +40,11 @@ login_manager = LoginManager(app)
 @app.errorhandler(ValidationError)
 def validation_error(error):
     return error.messages, 400
+
+
+@app.errorhandler(429)
+def rate_limit_handler(error):
+    return {"message": "rate limit exceeded %s" % error.description}, 429
 
 
 @app.errorhandler(AssertionError)
