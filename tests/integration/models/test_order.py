@@ -50,7 +50,6 @@ class TestOrderReceiverModel(IntegrationBaseTest):
         self.model = OrderReceiverModel
         self.params = self.order_receiver_params
 
-        # total should be 0 even if we set total = 100 . bcz in pre_save method, count will be calculated
         self.test_passing_param = {
             "first_name": self.order_receiver_params.get("first_name")
         }

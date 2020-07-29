@@ -65,7 +65,7 @@ class ProductAttributeModel(db.Model, SuperModel):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
+    product_id = db.Column(db.ForeignKey("product.id"))
 
     attrs_options = db.relationship(
         "ProductAttributeOptionsModel", backref="attr", lazy=True,
@@ -85,7 +85,7 @@ class ProductAttributeOptionsModel(db.Model, SuperModel):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    attr_id = db.Column(db.Integer, db.ForeignKey("product_attr.id"), nullable=True)
+    attr_id = db.Column(db.ForeignKey("product_attr.id"), nullable=True)
 
     cart_items = db.relationship("CartItemsModel", backref="product_option", lazy=True)
 
@@ -102,9 +102,7 @@ class ProductImageModel(db.Model, SuperModel):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    product_slug = db.Column(
-        db.String(80), db.ForeignKey("product.slug"), nullable=True
-    )
+    product_slug = db.Column(db.ForeignKey("product.slug"), nullable=True)
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.image_name}>"

@@ -16,8 +16,8 @@ class ReviewModel(db.Model, SuperModel):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    product_id = db.Column(db.ForeignKey("product.id"), nullable=False)
+    user_id = db.Column(db.ForeignKey("user.id"), nullable=False)
 
     def pre_save(self):
         assert 0 < self.ratings <= 5, "ratings should be between 1 and 5"

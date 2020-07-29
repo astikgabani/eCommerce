@@ -1,7 +1,7 @@
 from unittest import TestCase
 from datetime import datetime, timedelta
 
-from models.helper.enums import *
+from models.helper.enums import AddressTypeEnum
 
 from wsgi import app
 
@@ -64,6 +64,13 @@ class IntegrationBaseTest(TestCase):
             "value": "color",
             "price_change": 5,
         }
+        cls.product_image_params = {
+            "image_name": "test_image.png"
+        }
+        cls.product_category_params = {
+            "name": "home_appliance",
+            "value": "Home Appliance",
+        }
         cls.product_review_params = {
             "ratings": 3,
             "comments": "Comments",
@@ -78,8 +85,7 @@ class IntegrationBaseTest(TestCase):
             "phone_no": 1111111111
         }
         cls.user_confirmation_params = {
-            "expire_at": 121212,
-            "confirmed": True,
+            "confirmed": False,
         }
         cls.user_session_params = {
             "ip": "10.0.0.1",
@@ -128,4 +134,4 @@ class IntegrationBaseTest(TestCase):
             # deactivate() method
             item.deactivate()
             self.assertEqual(item.active, False)
-            self.assertIsNone(self.model.get_active().first())
+            self.assertIsNone(self.model.get_item(id=item.id))
