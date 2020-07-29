@@ -20,7 +20,7 @@ class AddressModel(db.Model, SuperModel):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.ForeignKey("user.id"))
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.type.value}>"
