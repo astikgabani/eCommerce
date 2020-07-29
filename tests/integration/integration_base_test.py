@@ -39,7 +39,7 @@ class IntegrationBaseTest(TestCase):
 
         # Order
         cls.order_params = {
-            "shipping_cost": 20,
+            "shipping_cost": 20.00,
             "total": 50,
         }
         cls.order_receiver_params = {

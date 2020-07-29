@@ -41,11 +41,9 @@ class OrderModel(db.Model, SuperModel):
         backref=db.backref("orders", lazy=True),
     )
 
-    order_receiver_id = db.Column(
-        db.Integer, db.ForeignKey("order_receiver.id"), nullable=False
-    )
-    cart_id = db.Column(db.Integer, db.ForeignKey("cart.id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    order_receiver_id = db.Column(db.ForeignKey("order_receiver.id"), nullable=False)
+    cart_id = db.Column(db.ForeignKey("cart.id"), nullable=False)
+    user_id = db.Column(db.ForeignKey("user.id"), nullable=False)
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.id}>"
