@@ -1,27 +1,27 @@
 from tests.integration.integration_base_test import IntegrationBaseTest
 
-from models.users import UserModel, UserSessionModel, UserSessionTokenModel, UserRoleModel, UserConfirmationModel
+from models.users import (
+    UserModel,
+    UserSessionModel,
+    UserSessionTokenModel,
+    UserRoleModel,
+    UserConfirmationModel,
+)
 
 
 class TestUserModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = UserModel
         self.params = self.user_params
-        self.test_passing_param = {
-            "email": self.user_params.get("email")
-        }
-        self.test_failing_param = {
-            "email": "Temp Name"
-        }
+        self.test_passing_param = {"email": self.user_params.get("email")}
+        self.test_failing_param = {"email": "Temp Name"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
 
 
 class TestUserSessionModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = UserSessionModel
@@ -32,12 +32,8 @@ class TestUserSessionModel(IntegrationBaseTest):
 
             self.params.update({"user_id": user.id})
 
-        self.test_passing_param = {
-            "ip": self.user_session_params.get("ip")
-        }
-        self.test_failing_param = {
-            "ip": "0.0.0.0"
-        }
+        self.test_passing_param = {"ip": self.user_session_params.get("ip")}
+        self.test_failing_param = {"ip": "0.0.0.0"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
@@ -51,7 +47,6 @@ class TestUserSessionModel(IntegrationBaseTest):
 
 
 class TestUserSessionTokenModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = UserSessionTokenModel
@@ -65,9 +60,7 @@ class TestUserSessionTokenModel(IntegrationBaseTest):
         self.test_passing_param = {
             "refresh_token": self.user_session_token_params.get("refresh_token")
         }
-        self.test_failing_param = {
-            "refresh_token": "dummy_tokens"
-        }
+        self.test_failing_param = {"refresh_token": "dummy_tokens"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
@@ -81,25 +74,18 @@ class TestUserSessionTokenModel(IntegrationBaseTest):
 
 
 class TestUserRoleModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = UserRoleModel
         self.params = self.user_roles_params
-        self.test_passing_param = {
-            "role": self.user_roles_params.get("role")
-        }
-        self.test_failing_param = {
-            "role": "dummy_role"
-        }
+        self.test_passing_param = {"role": self.user_roles_params.get("role")}
+        self.test_failing_param = {"role": "dummy_role"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
 
 
-
 class TestUserConfirmationModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = UserConfirmationModel
@@ -113,9 +99,7 @@ class TestUserConfirmationModel(IntegrationBaseTest):
         self.test_passing_param = {
             "confirmed": self.user_confirmation_params.get("confirmed")
         }
-        self.test_failing_param = {
-            "confirmed": True
-        }
+        self.test_failing_param = {"confirmed": True}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()

@@ -4,7 +4,6 @@ import models.review
 
 
 class TestOrderModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.params = {

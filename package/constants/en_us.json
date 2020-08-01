@@ -12,6 +12,7 @@
   "cart_deleted": "Cart deleted successfully",
   "cart_coupon_apply": "Coupon applied successfully",
   "cart_merged": "Added dummy cart to the user's cart",
+  "cart_should_not_be_empty": "Cart should not be empty",
 
   "cart_item_not_found": "Product not found in the cart",
   "cart_item_already_in_cart": "Item is already added in the cart",

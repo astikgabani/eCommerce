@@ -8,7 +8,6 @@ from datetime import datetime
 
 
 class TestProductModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.params = {
@@ -51,7 +50,6 @@ class TestProductModel(UnitBaseTest):
 
 
 class TestProductAttributeOptionsModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.params = {

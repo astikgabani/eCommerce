@@ -3,7 +3,12 @@ from marshmallow_enum import EnumField
 
 from plugins.ma import ma
 
-from models.order import OrderModel, OrderReceiverModel, OrderStatusEnum, PaymentStatusEnum
+from models.order import (
+    OrderModel,
+    OrderReceiverModel,
+    OrderStatusEnum,
+    PaymentStatusEnum,
+)
 
 
 class OrderSchema(ma.SQLAlchemyAutoSchema):

@@ -41,10 +41,8 @@ class Address(Resource):
         """
         current_user = get_jwt_identity()
         req_data = request.get_json()
-        address = address_schema.load(req_data, partial=True)
-        if address.id:
-            return {"message": gettext("address_already_created")}, 409
-        address.user_id = address.get("user_id") or current_user
+        address = address_schema.load(req_data)
+        address.user_id = current_user
         address.save_to_db()
         return (
             {
@@ -77,7 +75,7 @@ class Address(Resource):
         address.save_to_db()
         return (
             {
-                "message": gettext("address_not_found"),
+                "message": gettext("address_updated"),
                 "data": address_schema.dump(address),
             },
             200,
@@ -97,7 +95,7 @@ class Address(Resource):
         user = get_jwt_identity()
         req_data = request.get_json()
         address = AddressModel.get_item(id=req_data.get("id"), user_id=user)
-        if not address.id:
+        if not address:
             return {"message": gettext("address_not_found")}, 404
         address.deactivate()
         address.save_to_db()

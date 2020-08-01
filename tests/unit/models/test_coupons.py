@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 
 
 class TestCouponModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.params = {
@@ -34,8 +33,16 @@ class TestCouponModel(UnitBaseTest):
         output_2 = self.obj.get_discount_price(200)
 
         # Assert
-        self.assertEqual(output, 50, "get_discount_price, Discount price is not calculating properly.")
-        self.assertEqual(output_2, 40, "get_discount_price, Discount price is not calculating properly.")
+        self.assertEqual(
+            output,
+            50,
+            "get_discount_price, Discount price is not calculating properly.",
+        )
+        self.assertEqual(
+            output_2,
+            40,
+            "get_discount_price, Discount price is not calculating properly.",
+        )
 
     def test_get_discount_price_expired_coupon(self):
 
@@ -46,7 +53,11 @@ class TestCouponModel(UnitBaseTest):
         output = self.obj.get_discount_price(500)
 
         # Assert
-        self.assertEqual(output, 0, "get_discount_price, Discount price is not calculating if coupon has expired.")
+        self.assertEqual(
+            output,
+            0,
+            "get_discount_price, Discount price is not calculating if coupon has expired.",
+        )
 
     def test_get_discount_price_not_started_coupon(self):
 
@@ -57,7 +68,11 @@ class TestCouponModel(UnitBaseTest):
         output = self.obj.get_discount_price(500)
 
         # Assert
-        self.assertEqual(output, 0, "get_discount_price, Discount price is not calculating if coupon has expired.")
+        self.assertEqual(
+            output,
+            0,
+            "get_discount_price, Discount price is not calculating if coupon has expired.",
+        )
 
     def test_get_discount_price_value_discount(self):
 
@@ -68,4 +83,8 @@ class TestCouponModel(UnitBaseTest):
         output = self.obj.get_discount_price(500)
 
         # Assert
-        self.assertEqual(output, 20, "get_discount_price, Discount price is not calculating if coupon has expired.")
+        self.assertEqual(
+            output,
+            20,
+            "get_discount_price, Discount price is not calculating if coupon has expired.",
+        )

@@ -6,7 +6,6 @@ from models.users import UserModel
 
 
 class TestReviewModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = ReviewModel
@@ -23,9 +22,7 @@ class TestReviewModel(IntegrationBaseTest):
         self.test_passing_param = {
             "comments": self.product_review_params.get("comments")
         }
-        self.test_failing_param = {
-            "comments": "Temp Name"
-        }
+        self.test_failing_param = {"comments": "Temp Name"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()

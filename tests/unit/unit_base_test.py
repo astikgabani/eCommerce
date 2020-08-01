@@ -3,7 +3,6 @@ from app import app
 
 
 class UnitBaseTest(TestCase):
-
     def setUp(self) -> None:
         pass
 

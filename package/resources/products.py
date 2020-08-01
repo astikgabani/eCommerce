@@ -193,6 +193,7 @@ class Products(Resource):
         if not isinstance(products_data, list):
             return {"message": gettext("products_should_list")}, 400
         error_lst = []
+        created_lst = []
         for product in products_data:
             try:
                 product = product_all_schema.load(product)
@@ -204,7 +205,14 @@ class Products(Resource):
                 error_lst.append((product, gettext("product_already_found")))
                 continue
             product.save_to_db()
-        return {"error_products": [err_product for err_product in error_lst]}, 200
+            created_lst.append(product_all_schema.dump(product))
+        return (
+            {
+                "created_products": [product for product in created_lst],
+                "error_products": [err_product for err_product in error_lst],
+            },
+            200,
+        )
 
 
 class ProductAttribute(Resource):

@@ -5,16 +5,11 @@ from models.users import UserModel
 
 
 class TestAddressModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = AddressModel
-        self.test_passing_param = {
-            "city": "Surat"
-        }
-        self.test_failing_param = {
-            "city": "Mumbai"
-        }
+        self.test_passing_param = {"city": "Surat"}
+        self.test_failing_param = {"city": "Mumbai"}
         self.params = self.address_params
 
     def test_super_model_methods_testing(self):

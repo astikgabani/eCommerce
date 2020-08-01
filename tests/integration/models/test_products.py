@@ -1,11 +1,15 @@
 from tests.integration.integration_base_test import IntegrationBaseTest
 
-from models.products import ProductModel, ProductAttributeModel, ProductAttributeOptionsModel, ProductImageModel
+from models.products import (
+    ProductModel,
+    ProductAttributeModel,
+    ProductAttributeOptionsModel,
+    ProductImageModel,
+)
 from models.product_category import ProductCategoryModel
 
 
 class TestProductModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = ProductModel
@@ -16,12 +20,8 @@ class TestProductModel(IntegrationBaseTest):
 
             self.params.update({"category_id": category.id})
 
-        self.test_passing_param = {
-            "name": self.product_params.get("name")
-        }
-        self.test_failing_param = {
-            "name": "dummy_product"
-        }
+        self.test_passing_param = {"name": self.product_params.get("name")}
+        self.test_failing_param = {"name": "dummy_product"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
@@ -31,11 +31,12 @@ class TestProductModel(IntegrationBaseTest):
             product = ProductModel(**self.params)
             product.save_to_db()
 
-            self.assertEqual(product.category.name, self.product_category_params.get("name"))
+            self.assertEqual(
+                product.category.name, self.product_category_params.get("name")
+            )
 
 
 class TestProductAttributeModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = ProductAttributeModel
@@ -46,12 +47,8 @@ class TestProductAttributeModel(IntegrationBaseTest):
 
             self.params.update({"product_id": product.id})
 
-        self.test_passing_param = {
-            "name": self.product_attr_params.get("name")
-        }
-        self.test_failing_param = {
-            "name": "dummy_product"
-        }
+        self.test_passing_param = {"name": self.product_attr_params.get("name")}
+        self.test_failing_param = {"name": "dummy_product"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
@@ -65,7 +62,6 @@ class TestProductAttributeModel(IntegrationBaseTest):
 
 
 class TestProductAttributeOptionsModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = ProductAttributeOptionsModel
@@ -76,12 +72,8 @@ class TestProductAttributeOptionsModel(IntegrationBaseTest):
 
             self.params.update({"attr_id": product_attr.id})
 
-        self.test_passing_param = {
-            "name": self.product_attr_options_params.get("name")
-        }
-        self.test_failing_param = {
-            "name": "dummy_product"
-        }
+        self.test_passing_param = {"name": self.product_attr_options_params.get("name")}
+        self.test_failing_param = {"name": "dummy_product"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
@@ -91,11 +83,12 @@ class TestProductAttributeOptionsModel(IntegrationBaseTest):
             product_attr_opt = ProductAttributeOptionsModel(**self.params)
             product_attr_opt.save_to_db()
 
-            self.assertEqual(product_attr_opt.attr.name, self.product_attr_params.get("name"))
+            self.assertEqual(
+                product_attr_opt.attr.name, self.product_attr_params.get("name")
+            )
 
 
 class TestProductImage(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = ProductImageModel
@@ -103,9 +96,7 @@ class TestProductImage(IntegrationBaseTest):
         self.test_passing_param = {
             "image_name": self.product_image_params.get("image_name")
         }
-        self.test_failing_param = {
-            "image_name": "dummy_product"
-        }
+        self.test_failing_param = {"image_name": "dummy_product"}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()

@@ -8,7 +8,6 @@ from datetime import datetime
 
 
 class TestCartModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.cart_params = {
@@ -19,8 +18,8 @@ class TestCartModel(UnitBaseTest):
             "updated": datetime.utcnow(),
             "user_id": 1,
             "session_id": 1,
-            "coupon_id": 1
-            }
+            "coupon_id": 1,
+        }
         self.cart_obj = models.cart.CartModel(**self.cart_params)
 
     @patch("models.cart.CartModel.count_total", new_callable=PropertyMock)
@@ -76,7 +75,9 @@ class TestCartModel(UnitBaseTest):
 
         # Assert
         mock_get_item.assert_called_once_with(id=10, total=50)
-        self.assertEqual(output, self, "get_or_create, Not returning the existing cart.")
+        self.assertEqual(
+            output, self, "get_or_create, Not returning the existing cart."
+        )
 
     def test_get_or_create_new_cart_creation(self):
         # Configure
@@ -90,14 +91,25 @@ class TestCartModel(UnitBaseTest):
         # Assert
         mock_get_item.assert_called_once_with(id=10, total=50)
         mock_save_to_db.assert_called_once_with()
-        self.assertIsInstance(output, self.cart_obj.__class__, "get_or_create, Newly created object is not an instance of CartModel.")
-        self.assertEqual(output.id, 10, "get_or_create, Not creating new cart with the given id value.")
-        self.assertEqual(output.total, 50, "get_or_create, Not creating new cart with the given total value.")
+        self.assertIsInstance(
+            output,
+            self.cart_obj.__class__,
+            "get_or_create, Newly created object is not an instance of CartModel.",
+        )
+        self.assertEqual(
+            output.id,
+            10,
+            "get_or_create, Not creating new cart with the given id value.",
+        )
+        self.assertEqual(
+            output.total,
+            50,
+            "get_or_create, Not creating new cart with the given total value.",
+        )
         self.assertNotEqual(output, self, "get_or_create, Not creating new cart.")
 
 
 class TestCartItemModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.cart_params = {
@@ -108,8 +120,8 @@ class TestCartItemModel(UnitBaseTest):
             "updated": datetime.utcnow(),
             "cart_id": 1,
             "product_id": 1,
-            "attr_option_id": 1
-            }
+            "attr_option_id": 1,
+        }
         self.cart_obj = models.cart.CartItemsModel(**self.cart_params)
 
     def test_pre_save(self):
@@ -135,7 +147,11 @@ class TestCartItemModel(UnitBaseTest):
         output = self.cart_obj.get_price()
 
         # Assert
-        self.assertEqual(output, 109, "get_price, Price change of product attribute option is not working properly")
+        self.assertEqual(
+            output,
+            109,
+            "get_price, Price change of product attribute option is not working properly",
+        )
 
     def test_post_save(self):
         # Configure
@@ -146,4 +162,6 @@ class TestCartItemModel(UnitBaseTest):
         self.cart_obj.post_save()
 
         # Assert
-        self.assertEqual(self.cart_obj.cart.total, 20, "post_save, count total is not working.")
+        self.assertEqual(
+            self.cart_obj.cart.total, 20, "post_save, count total is not working."
+        )

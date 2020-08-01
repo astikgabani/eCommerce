@@ -38,7 +38,7 @@ class Cart(Resource):
         """
         user = get_jwt_identity()
         client_ip = request.remote_addr
-        session = UserSessionModel.get_item(ip=client_ip, user_id=user)
+        session = UserSessionModel.get_or_create(ip=client_ip, user_id=user)
         cart = CartModel.get_or_create(user_id=user, session_id=session.id)
         return {"data": cart_schema.dump(cart)}, 200
 
@@ -78,7 +78,9 @@ class Cart(Resource):
         user = get_jwt_identity()
         client_ip = request.remote_addr
         session = UserSessionModel.get_or_create(ip=client_ip, user_id=user)
-        cart = CartModel.get_or_create(user_id=user, session=session)
+        cart = CartModel.get_item(user_id=user, session=session)
+        if not cart:
+            return {"message": gettext("cart_not_found")}, 404
         cart.deactivate()
         cart.save_to_db()
         return (
@@ -106,7 +108,7 @@ class CartItem(Resource):
         cart = CartModel.get_or_create(user_id=user, session_id=session.id)
         return (
             {
-                "cart_items": [
+                "data": [
                     cart_item_schema.dump(cart_item)
                     for cart_item in cart.get("cart_items")
                 ]
@@ -138,14 +140,14 @@ class CartItem(Resource):
         cart = CartModel.get_or_create(user_id=user, session=session)
         product = ProductModel.get_item(id=req_data.get("product_id"))
         if not product:
-            return {"message": gettext("product_not_found")}, 409
-        quantity = req_data.get("quantity")
-        if quantity:
-            del req_data["quantity"]
+            return {"message": gettext("product_not_found")}, 404
+        quantity = req_data.pop("quantity", 0)
         cart_item = cart_item_schema.load(
             req_data,
             instance=CartItemsModel.get_item(
-                cart_id=cart.id, product_id=product.id, attr_option_id=req_data.get("attr_option_id")
+                cart_id=cart.id,
+                product_id=product.id,
+                attr_option_id=req_data.get("attr_option_id"),
             ),
         )
         if cart_item.id:
@@ -160,7 +162,7 @@ class CartItem(Resource):
                 "message": gettext("cart_item_added"),
                 "data": cart_item_schema.dump(cart_item),
             },
-            201,
+            200,
         )
 
     @classmethod
@@ -186,11 +188,13 @@ class CartItem(Resource):
         cart_item = cart_item_schema.load(
             req_data,
             instance=CartItemsModel.get_item(
-                cart=cart, product_id=req_data.get("product_id")
+                cart=cart,
+                product_id=req_data.get("product_id"),
+                attr_option_id=req_data.get("attr_option_id"),
             ),
         )
         if not cart_item.id:
-            return {"message": gettext("cart_item_not_found")}, 409
+            return {"message": gettext("cart_item_not_found")}, 404
         cart_item.save_to_db()
         return (
             {
@@ -221,17 +225,18 @@ class CartItem(Resource):
         session = UserSessionModel.get_or_create(ip=client_ip, user_id=user)
         cart = CartModel.get_or_create(user_id=user, session_id=session.id)
         cart_item = CartItemsModel.get_item(
-            cart=cart, product_id=req_data.get("product_id")
+            cart=cart,
+            product_id=req_data.get("product_id"),
+            attr_option_id=req_data.get("attr_option_id"),
         )
         if not cart_item:
-            return {"message": gettext("cart_item_not_found")}, 409
-        cart_item.deactivate()
-        cart_item.save_to_db()
+            return {"message": gettext("cart_item_not_found")}, 404
+        cart_item.delete_from_db()
         return {"message": gettext("cart_item_deleted")}, 200
 
 
 class ApplyCoupon(Resource):
-    @jwt_optional
+    @jwt_required
     def post(self, coupon_code):
         """
         Apply the coupon on the cart.
@@ -245,13 +250,15 @@ class ApplyCoupon(Resource):
         @return: updated cart
         @rtype: dict of cart data
         """
+        coupon = CouponModel.get_item(code=coupon_code)
+        if not coupon:
+            return {"message": gettext("coupon_not_found")}, 404
         user = get_jwt_identity()
         client_ip = request.remote_addr
         session = UserSessionModel.get_or_create(ip=client_ip, user_id=user)
         cart = CartModel.get_or_create(user_id=user, session_id=session.id)
-        coupon = CouponModel.get_item(code=coupon_code)
-        if not coupon:
-            return {"message": gettext("coupon_not_found")}, 400
+        if not cart.cart_items:
+            return {"message": gettext("cart_should_not_be_empty")}, 400
         cart.coupon = coupon
         cart.save_to_db()
         return (
@@ -280,8 +287,10 @@ class MergeTwoCart(Resource):
         @return: updated cart
         @rtype: dict of cart data
         """
-        user = get_current_user()
-        user_cart = CartModel.get_or_create(user_id=user)
+        user = get_jwt_identity()
+        client_ip = request.remote_addr
+        session = UserSessionModel.get_or_create(ip=client_ip, user_id=user)
+        user_cart = CartModel.get_or_create(user_id=user, session_id=session.id)
         cart = CartModel.get_item(id=cart_id)
         if not cart:
             return {"message": gettext("cart_not_found")}, 404

@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 
 
 class TestOrderModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.params = {
@@ -44,7 +43,6 @@ class TestOrderModel(UnitBaseTest):
 
 
 class TestOrderReceiverModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.params = {

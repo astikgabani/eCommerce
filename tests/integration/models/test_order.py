@@ -6,7 +6,6 @@ from models.cart import CartModel
 
 
 class TestOrderModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = OrderModel
@@ -21,14 +20,16 @@ class TestOrderModel(IntegrationBaseTest):
             cart = CartModel(user_id=user.id, **self.cart_params)
             cart.save_to_db()
 
-            self.params.update({"order_receiver_id": order_receiver.id, "cart_id": cart.id, "user_id": user.id})
+            self.params.update(
+                {
+                    "order_receiver_id": order_receiver.id,
+                    "cart_id": cart.id,
+                    "user_id": user.id,
+                }
+            )
 
-        self.test_passing_param = {
-            "shipping_cost": 20.00
-        }
-        self.test_failing_param = {
-            "shipping_cost": 0.0
-        }
+        self.test_passing_param = {"shipping_cost": 20.00}
+        self.test_failing_param = {"shipping_cost": 0.0}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
@@ -39,12 +40,14 @@ class TestOrderModel(IntegrationBaseTest):
             order.save_to_db()
 
             self.assertEqual(order.user.email, self.user_params.get("email"))
-            self.assertEqual(order.order_receiver.first_name, self.order_receiver_params.get("first_name"))
+            self.assertEqual(
+                order.order_receiver.first_name,
+                self.order_receiver_params.get("first_name"),
+            )
             self.assertIsNotNone(order.cart.id)
 
 
 class TestOrderReceiverModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = OrderReceiverModel
@@ -53,9 +56,7 @@ class TestOrderReceiverModel(IntegrationBaseTest):
         self.test_passing_param = {
             "first_name": self.order_receiver_params.get("first_name")
         }
-        self.test_failing_param = {
-            "first_name": ""
-        }
+        self.test_failing_param = {"first_name": ""}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()

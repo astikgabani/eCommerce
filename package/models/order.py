@@ -8,7 +8,6 @@ from models.helper.enums import OrderStatusEnum, AddressTypeEnum, PaymentStatusE
 from datetime import datetime
 
 
-
 phone_regex = re.compile(r"[1-9][0-9]{9}")
 
 order_address = db.Table(
@@ -27,7 +26,9 @@ class OrderModel(db.Model, SuperModel):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.Enum(OrderStatusEnum), default=OrderStatusEnum.placed)
     shipping_cost = db.Column(db.Float(precision=2), default=0.00)
-    payment_status = db.Column(db.Enum(PaymentStatusEnum), default=PaymentStatusEnum.pending)
+    payment_status = db.Column(
+        db.Enum(PaymentStatusEnum), default=PaymentStatusEnum.pending
+    )
     total = db.Column(db.Float(precision=2), default=0.00)
     active = db.Column(db.Boolean, default=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
@@ -54,7 +55,9 @@ class OrderModel(db.Model, SuperModel):
         return getattr(self, "status")
 
     def set_payment_status(self, status: str):
-        self.payment_status = PaymentStatusEnum.__members__.get(status) or PaymentStatusEnum.pending
+        self.payment_status = (
+            PaymentStatusEnum.__members__.get(status) or PaymentStatusEnum.pending
+        )
         self.save_to_db()
 
     def payment_amount(self):

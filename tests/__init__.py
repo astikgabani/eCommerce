@@ -2,4 +2,5 @@ import os
 import sys
 
 import package
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(package.__file__)))

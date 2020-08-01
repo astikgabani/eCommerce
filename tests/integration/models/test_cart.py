@@ -3,22 +3,21 @@ from tests.integration.integration_base_test import IntegrationBaseTest
 from models.cart import CartModel, CartItemsModel
 from models.users import UserModel, UserSessionModel
 from models.coupons import CouponModel
-from models.products import ProductModel, ProductAttributeModel, ProductAttributeOptionsModel
+from models.products import (
+    ProductModel,
+    ProductAttributeModel,
+    ProductAttributeOptionsModel,
+)
 
 
 class TestCartModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = CartModel
         self.params = self.cart_params
         # total should be 0 even if we set total = 100 . bcz in pre_save method, count will be calculated
-        self.test_passing_param = {
-            "total": 0.0
-        }
-        self.test_failing_param = {
-            "total": 100.0
-        }
+        self.test_passing_param = {"total": 0.0}
+        self.test_failing_param = {"total": 100.0}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
@@ -55,7 +54,6 @@ class TestCartModel(IntegrationBaseTest):
 
 
 class TestCartItemsModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = CartItemsModel
@@ -66,22 +64,28 @@ class TestCartItemsModel(IntegrationBaseTest):
             product = ProductModel(**self.product_params)
             product.save_to_db()
 
-            product_attr = ProductAttributeModel(product_id=product.id, **self.product_attr_params)
+            product_attr = ProductAttributeModel(
+                product_id=product.id, **self.product_attr_params
+            )
             product_attr.save_to_db()
 
-            product_attr_opt = ProductAttributeOptionsModel(attr_id=product_attr.id, **self.product_attr_options_params)
+            product_attr_opt = ProductAttributeOptionsModel(
+                attr_id=product_attr.id, **self.product_attr_options_params
+            )
             product_attr_opt.save_to_db()
 
             self.params = self.cart_item_params
-            self.params.update({"cart_id": cart.id, "product_id": product.id, "attr_option_id": product_attr_opt.id})
+            self.params.update(
+                {
+                    "cart_id": cart.id,
+                    "product_id": product.id,
+                    "attr_option_id": product_attr_opt.id,
+                }
+            )
 
         # total should be 0 even if we set total = 100 . bcz in pre_save method, count will be calculated
-        self.test_passing_param = {
-            "quantity": self.cart_item_params.get("quantity")
-        }
-        self.test_failing_param = {
-            "quantity": 0
-        }
+        self.test_passing_param = {"quantity": self.cart_item_params.get("quantity")}
+        self.test_failing_param = {"quantity": 0}
 
     def test_super_model_methods_testing(self):
         self.super_model_methods_testing()
@@ -94,4 +98,7 @@ class TestCartItemsModel(IntegrationBaseTest):
 
             self.assertIsNotNone(cart_item.cart.id)
             self.assertEqual(cart_item.product.slug, self.product_params.get("slug"))
-            self.assertEqual(cart_item.product_option.name, self.product_attr_options_params.get("name"))
+            self.assertEqual(
+                cart_item.product_option.name,
+                self.product_attr_options_params.get("name"),
+            )

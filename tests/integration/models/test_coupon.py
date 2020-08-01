@@ -4,16 +4,11 @@ from models.coupons import CouponModel
 
 
 class TestCouponModel(IntegrationBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.model = CouponModel
-        self.test_passing_param = {
-            "code": self.coupon_params.get("code")
-        }
-        self.test_failing_param = {
-            "code": "DUMMY20"
-        }
+        self.test_passing_param = {"code": self.coupon_params.get("code")}
+        self.test_failing_param = {"code": "DUMMY20"}
         self.params = self.coupon_params
 
     def test_super_model_methods_testing(self):

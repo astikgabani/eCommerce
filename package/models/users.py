@@ -102,7 +102,7 @@ class UserSessionModel(db.Model, SuperModel):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
+    user_id = db.Column(db.ForeignKey("user.id"), nullable=True)
 
     tokens = db.relationship("UserSessionTokenModel", backref="session", lazy=True)
     cart = db.relationship("CartModel", backref="session", lazy=True)
@@ -131,7 +131,7 @@ class UserSessionTokenModel(db.Model, SuperModel):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    session_id = db.Column(db.Integer, db.ForeignKey("user_session.id"), nullable=False)
+    session_id = db.Column(db.ForeignKey("user_session.id"), nullable=False)
 
 
 class UserRoleModel(db.Model, SuperModel):
@@ -159,7 +159,7 @@ class UserConfirmationModel(db.Model, SuperModel):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
+    user_id = db.Column(db.ForeignKey("user.id"), nullable=True)
 
     user = db.relationship("UserModel")
 

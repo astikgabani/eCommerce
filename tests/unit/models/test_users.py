@@ -9,7 +9,6 @@ from time import time
 
 
 class TestUserModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.params = {
@@ -95,7 +94,9 @@ class TestUserModel(UnitBaseTest):
         output = self.obj.verify_password("pwd")
 
         # Assert
-        self.assertEqual(output, True, "verify_password, password is not checking properly")
+        self.assertEqual(
+            output, True, "verify_password, password is not checking properly"
+        )
         mock_check_hash.assert_called_once_with(self.obj.password, "pwd")
 
     def test_check_password_already_hashed(self):
@@ -106,7 +107,11 @@ class TestUserModel(UnitBaseTest):
         output = self.obj.check_password_already_hashed()
 
         # Assert
-        self.assertEqual(output, True, "check_password_already_hashed, Password hash is not checking properly")
+        self.assertEqual(
+            output,
+            True,
+            "check_password_already_hashed, Password hash is not checking properly",
+        )
 
     def test_check_password_already_hashed_false(self):
         # Configure
@@ -116,11 +121,14 @@ class TestUserModel(UnitBaseTest):
         output = self.obj.check_password_already_hashed()
 
         # Assert
-        self.assertEqual(output, False, "check_password_already_hashed, Password hash is not checking properly")
+        self.assertEqual(
+            output,
+            False,
+            "check_password_already_hashed, Password hash is not checking properly",
+        )
 
 
 class TestUserConfirmationModel(UnitBaseTest):
-
     def setUp(self) -> None:
         super().setUp()
         self.params = {
@@ -142,7 +150,11 @@ class TestUserConfirmationModel(UnitBaseTest):
 
         # Assert
         self.assertIsNotNone(self.obj.id)
-        self.assertAlmostEqual(time() + models.users.CONFIRMATION_EXPIRATION_DELTA, self.obj.expire_at, delta=5)
+        self.assertAlmostEqual(
+            time() + models.users.CONFIRMATION_EXPIRATION_DELTA,
+            self.obj.expire_at,
+            delta=5,
+        )
 
     def test_expired(self):
         # Configure
