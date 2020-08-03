@@ -1,7 +1,7 @@
 import os
 from constants import constants
 
-log_root_dir = "log"
+log_root_dir = os.path.join(constants.ROOT_PATH, "log")
 
 if not os.path.exists(log_root_dir):
     os.mkdir(log_root_dir)

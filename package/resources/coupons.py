@@ -80,11 +80,11 @@ class Coupon(Resource):
         coupon = coupon_schema.load(
             req_data, instance=CouponModel.get_item(code=code), partial=True
         )
-        if not coupon:
-            return {"message": gettext("coupon_not_found")}, 400
+        if not coupon.id:
+            return {"message": gettext("coupon_not_found")}, 404
         coupon.save_to_db()
         return (
-            {"message": gettext("coupon_updated"), "data": coupon_schema.dump(coupon),},
+            {"message": gettext("coupon_updated"), "data": coupon_schema.dump(coupon), },
             200,
         )
 

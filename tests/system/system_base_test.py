@@ -1,6 +1,6 @@
 from tests.base_test import BaseTest, app
 
-from models.users import UserModel, UserConfirmationModel
+from models.users import UserModel, UserConfirmationModel, UserRoleModel
 from models.coupons import CouponModel
 
 import json
@@ -93,3 +93,12 @@ class SystemBaseTest(BaseTest):
                 self.refresh_token_headers.update(
                     {"Authorization": f"Bearer {self.refresh_token}"}
                 )
+
+    def get_admin_account(self):
+        self.set_session_key()
+        role = UserRoleModel(**self.user_roles_params)
+        role.save_to_db()
+
+        user = UserModel.get_item(first_name=self.user_params.get("first_name"))
+        user.roles.append(role)
+        user.save_to_db()

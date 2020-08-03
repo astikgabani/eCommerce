@@ -50,8 +50,6 @@ class CartModel(db.Model, SuperModel):
         if cart:
             return cart
         new_cart = cls(**kwargs)
-        # print(f"In Cart: {kwargs}")
-        # print(f"In Cart: {new_cart.get_json_data()}")
         new_cart.save_to_db()
         return new_cart
 
