@@ -2,6 +2,7 @@ from tests.base_test import BaseTest, app
 
 from models.users import UserModel, UserConfirmationModel, UserRoleModel
 from models.coupons import CouponModel
+from models.order import OrderModel, OrderReceiverModel
 
 import json
 
@@ -11,11 +12,42 @@ class SystemBaseTest(BaseTest):
         super().setUp()
         self.headers = {"Content-Type": "application/json"}
 
+    def get_whole_order_data(self):
+        user = self.set_session_key()
+        product = self.create_product()
+        cart = self.add_product_to_cart(
+            product.get("id"),
+            attr_option_id=product["attrs"][0]["attrs_options"][0]["id"],
+        )
+        order_receiver = self.create_order_receiver()
+        order_data = self.order_params.copy()
+        order_data.update(
+            order_receiver_id=order_receiver.get("id"),
+            cart_id=cart.get("cart_id"),
+            user_id=user.get("id")
+        )
+        return order_data
+
     def create_coupon(self):
         with app.app_context():
             coupon = CouponModel(**self.coupon_params)
             coupon.save_to_db()
             return coupon.get_json_data()
+
+    def create_order(self, **kwargs):
+        with app.app_context():
+            data = self.order_params.copy()
+            data.update(kwargs)
+
+            order = OrderModel(**data)
+            order.save_to_db()
+            return order.get_json_data()
+
+    def create_order_receiver(self):
+        with app.app_context():
+            order_receiver = OrderReceiverModel(**self.order_receiver_params)
+            order_receiver.save_to_db()
+            return order_receiver.get_json_data()
 
     def add_product_to_cart(self, product_id, attr_option_id=None):
         with app.test_client() as client:
@@ -93,6 +125,7 @@ class SystemBaseTest(BaseTest):
                 self.refresh_token_headers.update(
                     {"Authorization": f"Bearer {self.refresh_token}"}
                 )
+                return user.get_json_data()
 
     def get_admin_account(self):
         self.set_session_key()

@@ -59,7 +59,7 @@ class Order(Resource):
         """
         user = get_jwt_identity()
         order = OrderModel.get_item(id=order_id, user_id=user)
-        if not order.get("id"):
+        if not order:
             return {"message": gettext("order_not_found")}, 404
         order.deactivate()
         order.save_to_db()
@@ -80,7 +80,7 @@ class Orders(Resource):
         """
         user = get_jwt_identity()
         orders = OrderModel.get_items(user_id=user)
-        return {"orders": [order_schema.dump(order) for order in orders]}, 200
+        return {"data": [order_schema.dump(order) for order in orders]}, 200
 
 
 class OrderCreate(Resource):
@@ -108,16 +108,24 @@ class OrderCreate(Resource):
         client_ip = request.remote_addr
         session = UserSessionModel.get_or_create(user_id=user, ip=client_ip)
         cart = CartModel.get_item(user_id=user, session=session)
-        if not cart and not cart.cart_items:
+        if not cart or not cart.cart_items:
             return {"message": gettext("no_item_in_cart")}, 404
         req_data.update({"cart_id": cart.id, "user_id": user})
         order = order_schema.load(
             req_data, instance=OrderModel.get_item(cart_id=cart.id)
         )
-        if order.get("id"):
+        if order.id:
             return {"message": gettext("order_already_placed")}, 409
         order.save_to_db()
         try:
+            # if app.config.get("TESTING"):
+            if req_data.get("is_testing_enable", False):
+                order.set_payment_status("paid")
+                order.clear_all()
+                return (
+                    {"message": gettext("order_placed"), "data": order_schema.dump(order)},
+                    201,
+                )
             order.set_payment_status("initiated")
             order.payment_with_stripe(req_data.get("token"))
             order.set_payment_status("paid")
@@ -177,7 +185,7 @@ class OrderReceiver(Resource):
         @rtype: dict of details
         """
         order_receiver = OrderReceiverModel.get_item(id=id)
-        if not order_receiver.get("id"):
+        if not order_receiver:
             return {"message": "Order Receiver not found"}, 404
         return {"data": order_receiver_schema.dump(order_receiver)}, 200
 
@@ -198,16 +206,18 @@ class OrderReceiver(Resource):
         """
         user_id = get_jwt_identity()
         req_data = request.get_json()
-        order_receiver = order_receiver_schema.load(
-            req_data, instance=OrderReceiverModel.get_item(id=id), partial=True
-        )
-        if not order_receiver.get("id"):
+        order_receiver = OrderReceiverModel.get_item(id=id)
+        if not order_receiver:
             return {"message": gettext("order_receiver_not_found")}, 404
         if req_data.get("user") == "self":
             user = UserModel.get_item(id=user_id)
             order_receiver.first_name = user.first_name
             order_receiver.last_name = user.last_name
             order_receiver.phone_no = user.phone_no
+        else:
+            order_receiver = order_receiver_schema.load(
+                req_data, instance=order_receiver, partial=True
+            )
         order_receiver.save_to_db()
         return (
             {
@@ -233,7 +243,7 @@ class OrderReceiver(Resource):
         """
         order_receiver = OrderReceiverModel.get_item(id=id)
         if not order_receiver:
-            return {"message": gettext("order_receiver_not_found")}, 409
+            return {"message": gettext("order_receiver_not_found")}, 404
         order_receiver.deactivate()
         order_receiver.save_to_db()
         return {"message": gettext("order_receiver_deleted")}, 200
@@ -257,16 +267,21 @@ class OrderReceiverCreate(Resource):
         user_id = get_jwt_identity()
         req_data = request.get_json()
         order = OrderModel.get_item(id=req_data.get("order_id"))
-        order_receiver = order_receiver_schema.load(
-            req_data, instance=OrderReceiverModel.get_item(order=order)
-        )
-        if order_receiver.id:
+        order_receiver = OrderReceiverModel.get_item(order=order)
+        if order_receiver:
             return {"message": gettext("order_receiver_already_settled")}, 409
         if req_data.get("user") == "self":
             user = UserModel.get_item(id=user_id)
-            order_receiver.first_name = user.first_name
-            order_receiver.last_name = user.last_name
-            order_receiver.phone_no = user.phone_no
+            order_receiver_params = {
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "phone_no": user.phone_no
+            }
+            order_receiver = order_receiver_schema.load(order_receiver_params)
+        else:
+            order_receiver = order_receiver_schema.load(
+                req_data, instance=order_receiver
+            )
         order_receiver.save_to_db()
         return (
             {
