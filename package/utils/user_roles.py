@@ -2,8 +2,6 @@ from functools import wraps
 from flask_jwt_extended import get_jwt_identity
 from models.users import UserModel, UserRoleModel
 
-ADMIN_ROLE = "admin"
-
 
 def required_role(roles):
     def decorator(func):
@@ -20,6 +18,3 @@ def required_role(roles):
         return decorated_function
 
     return decorator
-
-
-roles_json = {"UserRoleAssign": {"post": [ADMIN_ROLE]}}
