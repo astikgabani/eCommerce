@@ -8,4 +8,6 @@ RUN pip install -r requirements.txt
 
 COPY ./package .
 
+EXPOSE 7000
+
 CMD [ "python", "wsgi.py" ]
