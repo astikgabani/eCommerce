@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity, jwt_optional
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.review import ReviewModel
 
@@ -31,7 +31,7 @@ class ProductReview(Resource):
         return {"data": product_review_schema.dump(review)}, 200
 
     @classmethod
-    @jwt_required
+    @jwt_required()
     def post(cls, product_id):
         """
         @param product_id: product unique id
@@ -66,7 +66,7 @@ class ProductReview(Resource):
         )
 
     @classmethod
-    @jwt_required
+    @jwt_required()
     def put(cls, product_id):
         """
         @param product_id: product unique id
@@ -98,7 +98,7 @@ class ProductReview(Resource):
         )
 
     @classmethod
-    @jwt_required
+    @jwt_required()
     def delete(cls, product_id):
         """
         @param product_id: product unique id

@@ -8,7 +8,6 @@ from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
     get_jwt_identity,
-    jwt_refresh_token_required,
     jwt_required,
 )
 
@@ -185,7 +184,7 @@ class UserTokenRefresh(Resource):
     """
 
     @classmethod
-    @jwt_refresh_token_required
+    @jwt_required(refresh=True)
     def post(cls):
         """
         Create a new access-token from refresh-token
@@ -259,7 +258,7 @@ class UserFreshLogin(Resource):
 
 
 class UserRoles(Resource):
-    @jwt_required
+    @jwt_required()
     @required_role(["admin"])
     def get(self):
         """
@@ -276,7 +275,7 @@ class UserRoles(Resource):
             return {"message": gettext("user_role_not_found")}, 404
         return {"roles": [role.role for role in roles]}, 200
 
-    @jwt_required
+    @jwt_required()
     # @required_role(["admin"])
     def post(self):
         """
@@ -305,7 +304,7 @@ class UserRoles(Resource):
 
 
 class UserRoleAssign(Resource):
-    @jwt_required
+    @jwt_required()
     # @required_role(["admin"])
     def post(self):
         """

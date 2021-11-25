@@ -31,7 +31,7 @@ class ProductCategory(Resource):
             return {"message": gettext("product_category_not_found")}, 409
         return {"data": product_category_schema.dump(item)}, 200
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def put(self, id):
         """
@@ -61,7 +61,7 @@ class ProductCategory(Resource):
             201,
         )
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def delete(self, id):
         """
@@ -100,7 +100,7 @@ class ProductCategoryCreate(Resource):
         items = ProductCategoryModel.get_items(parent_id=parent_id)
         return {"data": [product_category_schema.dump(item) for item in items]}
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def post(self, parent_id):
         """

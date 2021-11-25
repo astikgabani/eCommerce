@@ -3,7 +3,6 @@ from flask_restful import Resource
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity,
-    jwt_optional,
     get_current_user,
 )
 
@@ -25,7 +24,7 @@ user_session_schema = UserSessionSchema()
 
 class Cart(Resource):
     @classmethod
-    @jwt_optional
+    @jwt_required(optional=True)
     def get(cls):
         """
         Return the cart object data.
@@ -43,7 +42,7 @@ class Cart(Resource):
         return {"data": cart_schema.dump(cart)}, 200
 
     @classmethod
-    @jwt_optional
+    @jwt_required(optional=True)
     def post(cls):
         """
         Return the cart object data.
@@ -64,7 +63,7 @@ class Cart(Resource):
         )
 
     @classmethod
-    @jwt_optional
+    @jwt_required(optional=True)
     def delete(cls):
         """
         Delete the cart.
@@ -91,7 +90,7 @@ class Cart(Resource):
 
 class CartItem(Resource):
     @classmethod
-    @jwt_optional
+    @jwt_required(optional=True)
     def get(cls):
         """
         Get the cart items.
@@ -117,7 +116,7 @@ class CartItem(Resource):
         )
 
     @classmethod
-    @jwt_optional
+    @jwt_required(optional=True)
     def post(cls):
         """
         Add the items to cart.
@@ -166,7 +165,7 @@ class CartItem(Resource):
         )
 
     @classmethod
-    @jwt_optional
+    @jwt_required(optional=True)
     def put(cls):
         """
         Add the items to cart.
@@ -205,7 +204,7 @@ class CartItem(Resource):
         )
 
     @classmethod
-    @jwt_optional
+    @jwt_required(optional=True)
     def delete(cls):
         """
         remove the item from the cart.
@@ -236,7 +235,7 @@ class CartItem(Resource):
 
 
 class ApplyCoupon(Resource):
-    @jwt_required
+    @jwt_required()
     def post(self, coupon_code):
         """
         Apply the coupon on the cart.
@@ -268,7 +267,7 @@ class ApplyCoupon(Resource):
 
 
 class MergeTwoCart(Resource):
-    @jwt_required
+    @jwt_required()
     def post(self, cart_id):
         """
         @param: cart_id

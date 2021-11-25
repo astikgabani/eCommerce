@@ -23,7 +23,7 @@ order_receiver_schema = OrderReceiverSchema()
 
 
 class Order(Resource):
-    @jwt_required
+    @jwt_required()
     def get(self, order_id):
         """
         @param order_id: id of the order
@@ -43,7 +43,7 @@ class Order(Resource):
             return {"message": gettext("order_not_found")}, 404
         return {"data": order_schema.dump(item)}, 200
 
-    @jwt_required
+    @jwt_required()
     def delete(self, order_id):
         """
         @param order_id: id of the order
@@ -68,7 +68,7 @@ class Order(Resource):
 
 class Orders(Resource):
     @classmethod
-    @jwt_required
+    @jwt_required()
     def get(cls):
         """
         Get the list of all orders
@@ -85,7 +85,7 @@ class Orders(Resource):
 
 class OrderCreate(Resource):
     @classmethod
-    @jwt_required
+    @jwt_required()
     def post(cls):
         """
         Placed an order.
@@ -170,7 +170,7 @@ class OrderCreate(Resource):
 
 
 class OrderReceiver(Resource):
-    @jwt_required
+    @jwt_required()
     def get(self, id):
         """
         @param id: id of order receiver
@@ -189,7 +189,7 @@ class OrderReceiver(Resource):
             return {"message": "Order Receiver not found"}, 404
         return {"data": order_receiver_schema.dump(order_receiver)}, 200
 
-    @jwt_required
+    @jwt_required()
     def put(self, id):
         """
         @param id: id of order receiver
@@ -227,7 +227,7 @@ class OrderReceiver(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     def delete(self, id):
         """
         @param id: id of order receiver
@@ -251,7 +251,7 @@ class OrderReceiver(Resource):
 
 class OrderReceiverCreate(Resource):
     @classmethod
-    @jwt_required
+    @jwt_required()
     def post(cls):
         """
         Creating a new order receiver.

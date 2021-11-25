@@ -31,8 +31,8 @@ def create_tables():
     user_role.role = "admin"
     user_role.save_to_db()
     user = UserModel()
-    user.email = "admin_test@yopmail.com"
-    user.password = "admin123"
+    user.email = "admin@example.com"
+    user.password = "admin"
     user.first_name = "admin"
     user.last_name = "admin"
     user.phone_no = 9999999999

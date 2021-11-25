@@ -21,9 +21,9 @@ import werkzeug.exceptions
 app = Flask(__name__)
 
 # Logging Configuration
-from config.logging import log_config
+# from config.logging import log_config
 
-dictConfig(log_config)
+# dictConfig(log_config)
 
 load_dotenv(get_path("config", ".env"), verbose=True)
 app.config.from_object("config.default_config")

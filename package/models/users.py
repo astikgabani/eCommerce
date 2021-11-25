@@ -161,7 +161,7 @@ class UserConfirmationModel(db.Model, SuperModel):
 
     user_id = db.Column(db.ForeignKey("user.id"), nullable=True)
 
-    user = db.relationship("UserModel")
+    user = db.relationship("UserModel", overlaps="confirmation")
 
     def pre_save(self):
         self.id = uuid4().hex

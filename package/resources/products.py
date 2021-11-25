@@ -55,7 +55,7 @@ class Product(Resource):
             return {"data": gettext("product_not_found")}, 404
         return {"data": product_schema.dump(product)}, 200
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def put(self, slug):
         """
@@ -85,7 +85,7 @@ class Product(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def delete(self, slug):
         """
@@ -109,7 +109,7 @@ class Product(Resource):
 
 
 class ProductCreate(Resource):
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def post(self):
         """
@@ -234,7 +234,7 @@ class ProductAttribute(Resource):
             return {"message": gettext("product_attribute_not_found")}, 404
         return {"data": product_attribute_schema.dump(product_attr)}, 200
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def put(self, attr_id):
         """
@@ -264,7 +264,7 @@ class ProductAttribute(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def delete(self, attr_id):
         """
@@ -288,7 +288,7 @@ class ProductAttribute(Resource):
 
 
 class ProductAttributeCreate(Resource):
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def post(self):
         """
@@ -369,7 +369,7 @@ class ProductAttributeOption(Resource):
             return {"message": gettext("product_attribute_option_not_found")}, 404
         return {"data": product_attribute_options_schema.dump(product_attr_opt)}, 200
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def put(self, opt_id):
         """
@@ -401,7 +401,7 @@ class ProductAttributeOption(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def delete(self, opt_id):
         """
@@ -425,7 +425,7 @@ class ProductAttributeOption(Resource):
 
 
 class ProductAttributeOptionCreate(Resource):
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def post(self):
         """
@@ -515,7 +515,7 @@ class ProductImages(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def post(self, slug):
         """
@@ -595,7 +595,7 @@ class ProductImage(Resource):
         except FileNotFoundError:
             return {"message": gettext("image_not_found")}, 404
 
-    @jwt_required
+    @jwt_required()
     def delete(self, slug, filename):
         """
         @param slug: slug of product

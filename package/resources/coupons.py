@@ -32,7 +32,7 @@ class Coupon(Resource):
             return {"message": gettext("coupon_not_found")}, 404
         return {"data": coupon_schema.dump(item)}, 200
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def post(self, code):
         """
@@ -61,7 +61,7 @@ class Coupon(Resource):
             201,
         )
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def put(self, code):
         """
@@ -88,7 +88,7 @@ class Coupon(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def delete(self, code):
         """
@@ -123,7 +123,7 @@ class Coupons(Resource):
 
 
 class ProductCouponMapping(Resource):
-    @jwt_required
+    @jwt_required()
     @required_role(["admin", "shop_keeper"])
     def post(self, code):
         """

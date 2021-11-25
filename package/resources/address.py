@@ -13,7 +13,7 @@ address_schema_with_id = AddressSchemaWithId()
 
 
 class Address(Resource):
-    @jwt_required
+    @jwt_required()
     def get(self):
         """
         Getting the list of address of specific user(user detect using it's access-token).
@@ -27,7 +27,7 @@ class Address(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     def post(self):
         """
         Create the new address as per the request data.
@@ -52,7 +52,7 @@ class Address(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     def put(self):
         """
         Update the already created address as per the request data.
@@ -81,7 +81,7 @@ class Address(Resource):
             200,
         )
 
-    @jwt_required
+    @jwt_required()
     def delete(self):
         """
         Delete the address as per the request data.
