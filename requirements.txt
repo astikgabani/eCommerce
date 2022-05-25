@@ -23,7 +23,7 @@ MarkupSafe==2.0.1
 marshmallow==3.14.1
 marshmallow-enum==1.5.1
 marshmallow-sqlalchemy==0.26.1
-PyJWT==2.3.0
+PyJWT==2.4.0
 python-dotenv==0.19.2
 python-slugify==5.0.2
 pytz==2021.3
